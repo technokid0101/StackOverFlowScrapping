@@ -37,7 +37,7 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <ListView fx:id="lnkList" layoutX="961.0" layoutY="62.0" onMouseClicked="#loadUrl" prefHeight="714.0" prefWidth="293.0" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="62.0" />
-                                <WebView fx:id="webView" layoutX="23.0" layoutY="60.0" prefHeight="714.0" prefWidth="831.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="60.0" />
+                                <WebView fx:id="webView" layoutX="23.0" layoutY="60.0" prefHeight="714.0" prefWidth="831.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="346.0" AnchorPane.topAnchor="60.0" />
                                 <Button fx:id="btnPrev" layoutX="23.0" layoutY="14.0" mnemonicParsing="false" onAction="#nextPrev" style="-fx-background-color: #EEB577;" text="Prev" textFill="WHITE">
                                     <font>
                                         <Font size="14.0" />

@@ -51,7 +51,7 @@ public class Dashboard extends StackOverFlowScrapping implements Initializable {
     public void search(ActionEvent actionEvent) {
         waitPanel.setVisible(true);
         Thread thread = new Thread(() -> {
-            ArrayList<String> links = getAllAnsweredQuestions(inpSearch.getText());
+            ArrayList<String> links = getAllAnsweredQuestionsUsingSelenium(inpSearch.getText());
             Platform.runLater(() -> {
                 waitPanel.setVisible(false);
                 lnkList.getItems().clear();
@@ -67,8 +67,8 @@ public class Dashboard extends StackOverFlowScrapping implements Initializable {
 
     public void loadUrl() {
         waitPanel.setVisible(true);
-        webView.getEngine().setJavaScriptEnabled(true);
         webView.getEngine().load(lnkList.getSelectionModel().getSelectedItem());
+        webView.getEngine().setJavaScriptEnabled(true);
         limitStatus.setText((lnkList.getSelectionModel().getSelectedIndex() + 1) + " of " + lnkList.getItems().size());
         waitPanel.setVisible(false);
     }

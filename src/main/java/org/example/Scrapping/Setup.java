@@ -64,7 +64,7 @@ public class Setup {
         this.element = element;
     }
 
-    public void loadSetup(String query) {
+    public void loadSeleniumSetup(String query) {
         System.out.println(Setup.class.getResource("chromedriver.exe").getFile());
         try {
             System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
@@ -76,10 +76,10 @@ public class Setup {
         // create object of chrome options
         chromeOptions = new ChromeOptions();
         // add the headless argument
-        // chromeOptions.addArguments("headless");
+        //chromeOptions.addArguments("headless");
         webDriver = new ChromeDriver(chromeOptions);
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-        webDriver.get("https://stackoverflow.com/search?q=" + query);
+        webDriver.get("https://stackoverflow.com/users/login");
         webDriver.manage().window().maximize();
         fluentWait = new FluentWait<>(webDriver);
         fluentWait.pollingEvery(Duration.ofSeconds(30));
@@ -145,11 +145,9 @@ public class Setup {
     }
 
     public List<WebElement> getElements(By xPath) {
-        Function<WebDriver, List<WebElement>> function = new Function<WebDriver, List<WebElement>>() {
-            public List<WebElement> apply(WebDriver arg0) {
-                List<WebElement> elements = arg0.findElements(xPath);
-                return elements;
-            }
+        Function<WebDriver, List<WebElement>> function = arg0 -> {
+            List<WebElement> elements = arg0.findElements(xPath);
+            return elements;
         };
         return fluentWait.until(function);
     }
