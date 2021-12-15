@@ -1,0 +1,6 @@
+org\example\Dashboard.class
+org\example\Scrapping\Setup.class
+org\example\Scrapping\StackOverFlowScrapping.class
+module-info.class
+org\example\Main.class
+org\example\App.class
