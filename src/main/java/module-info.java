@@ -6,6 +6,7 @@ module org.example {
     requires org.seleniumhq.selenium.chrome_driver;
     requires org.seleniumhq.selenium.support;
     requires org.jsoup;
+    requires ghostdriver;
 
     opens org.example to javafx.fxml;
     exports org.example;

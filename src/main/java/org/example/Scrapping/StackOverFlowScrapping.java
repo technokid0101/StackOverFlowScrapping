@@ -1,16 +1,10 @@
 package org.example.Scrapping;
 
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,29 +17,19 @@ public class StackOverFlowScrapping extends Setup {
     private By outLIst = By.xpath("//div[@class='status answered-accepted']//following::a[1]");
     private By btnLimit = By.xpath("//*[@id=\"mainbar\"]/div[5]/a[5]");
     private By btnNext = By.xpath("//a[text()=' Next']");
-    private By btnPageLimit = By.xpath("//*[@id=\"mainbar\"]/div[6]/a[3]4");
-    private By lnkPagination = By.xpath("//div[@class='s-pagination site1 themed pager float-left']");
-    private By txtHeader = By.xpath("//h1[@class='flex--item fl1 fs-headline1']");
-    private Document doc = null;
+    private By txtHeader = By.xpath("//h1[contains(text(),'Top Questions')]");
 
-    public ArrayList<String> getAllAnsweredQuestionsUsingSelenium(String query) {
+    public ArrayList<String> getAllAnsweredQuestionsUsingSeleniumLimited(String query, int limit) {
         ArrayList<String> ansLinkList = new ArrayList<>();
-        loadSeleniumSetup(query);
-
-        getElement(inpEmail).sendKeys("technokid0101@gmail.com");
-        getElement(inpPassword).sendKeys("Technokid@123");
-        getElement(btnLogin).click();
-        if (getElement(txtHeader).isDisplayed()) {
+        try {
             getElement(inpSearch).sendKeys(query);
             getElement(inpSearch).sendKeys(Keys.ENTER);
-
             List<WebElement> webElements;
             int pageNumber = 1;
             try {
                 getElement(btnNext);
-                int limit = Integer.parseInt(getElement(btnLimit).getText());
                 System.out.println("No of Pages->" + limit);
-                while (pageNumber < 20) {
+                while (pageNumber < limit) {
                     webElements = getElements(outLIst);
                     for (WebElement element : webElements) {
                         System.out.println(element.getAttribute("href"));
@@ -62,30 +46,57 @@ public class StackOverFlowScrapping extends Setup {
                     ansLinkList.add(element.getAttribute("href"));
                 }
             }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ArrayList<>();
         }
         return ansLinkList;
     }
 
-    public ArrayList<String> getAllAnswersUsingJsoup(String query) {
+    public ArrayList<String> getAllAnsweredQuestionsUsingSeleniumFullRange(String query) {
         ArrayList<String> ansLinkList = new ArrayList<>();
         try {
-            doc = Jsoup.connect("https://stackoverflow.com/search?q=" + query).get();
-            System.out.println(doc.body());
-            Elements elements = doc.selectXpath("//div[@class='status answered-accepted']//following::a[1]");
-            System.out.println(elements.size());
-            for (Element element : elements) {
-                System.out.println(element.attr("href"));
-                ansLinkList.add(element.attr("href"));
+            getElement(inpSearch).sendKeys(query);
+            getElement(inpSearch).sendKeys(Keys.ENTER);
+            List<WebElement> webElements;
+            int pageNumber = 1;
+            try {
+                getElement(btnNext);
+                int limit = Integer.parseInt(getElement(btnLimit).getText());
+                System.out.println("No of Pages->" + limit);
+                while (pageNumber < limit) {
+                    webElements = getElements(outLIst);
+                    for (WebElement element : webElements) {
+                        System.out.println(element.getAttribute("href"));
+                        ansLinkList.add(element.getAttribute("href"));
+                    }
+                    getElement(btnNext).click();
+                    System.out.println("Page Number- > " + pageNumber);
+                    pageNumber = pageNumber + 1;
+                }
+            } catch (Exception exception) {
+                webElements = getElements(outLIst);
+                for (WebElement element : webElements) {
+                    System.out.println(element.getAttribute("href"));
+                    ansLinkList.add(element.getAttribute("href"));
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ArrayList<>();
         }
         return ansLinkList;
     }
 
-    public static void main(String[] args) {
-        StackOverFlowScrapping stackOverFlowScrapping = new StackOverFlowScrapping();
-        stackOverFlowScrapping.getAllAnsweredQuestionsUsingSelenium("Disable javascript from running in javafx webview");
-        //stackOverFlowScrapping.getAllAnswersUsingJsoup("JavafX");
+    public boolean isValidLogin(String username, String password) {
+        loadSeleniumSetup();
+        getElement(inpEmail).sendKeys(username);
+        getElement(inpPassword).sendKeys(password);
+        getElement(btnLogin).click();
+        if (getElement(txtHeader).isDisplayed()) {
+            System.out.println("Logged in Successfully...!!");
+            return true;
+        }
+        return false;
     }
 }
